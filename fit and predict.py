@@ -2,18 +2,30 @@ import numpy as np
 
 class LinearRegression_OrdinaryLeastSquares:
     def __init__(self):
-        self.w = None # weight
+        self.w = None  # веса
 
-
-    def fit(self, X, y, w):
+    def fit(self, X, y):
+        X = np.array(X)
+        y = np.array(y)
+        # добавляем столбец единиц для свободного члена
         X = np.c_[np.ones(X.shape[0]), X]
-        self.w = np.invert(X @ X.T) @ X.T @ y
-
+        # формула OLS
+        self.w = np.linalg.inv(X.T @ X) @ X.T @ y
 
     def predict(self, X):
+        X = np.array(X)
         X = np.c_[np.ones(X.shape[0]), X]
         return X @ self.w
 
-X = [[1,2], [2,3], [3,4], [4,5]]
-LinearRegression_OrdinaryLeastSquares.predict(X)
 
+# --- пример ---
+X = [[1,2],
+     [2,1],
+     [3,5],
+     [4,7]]
+y = [10, 8, 20, 25]
+
+model = LinearRegression_OrdinaryLeastSquares()
+model.fit(X, y)
+print("Веса:", model.w)
+print("Прогноз:", model.predict([[5, 6], [6, 7]]))
